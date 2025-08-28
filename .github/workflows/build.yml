@@ -1,0 +1,32 @@
+name: 'Build Curriculum vitæ'
+
+on:
+  pull_request:
+    branches:    
+      - '*'
+  push:
+    branches:    
+      - '*'
+
+jobs:
+  build_curriculum_vitae:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            submodules: recursive
+      - uses: cachix/install-nix-action@v26
+      - uses: cachix/cachix-action@v14
+        with:
+          name: devenv
+      - name: Install devenv.sh
+        run: nix profile install nixpkgs#devenv
+
+      - name: Build the files
+        run: devenv shell build_all
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: CurriculumVitae PDF
+          path: build/*.pdf

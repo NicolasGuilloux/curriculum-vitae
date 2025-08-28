@@ -1,0 +1,43 @@
+name: 'Release Curriculum vitæ'
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release_curriculum_vitae:
+    name: Release ${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            submodules: recursive
+      - uses: cachix/install-nix-action@v26
+      - uses: cachix/cachix-action@v14
+        with:
+          name: devenv
+      - name: Install devenv.sh
+        run: nix profile install nixpkgs#devenv
+
+      - name: Build the files
+        run: devenv shell build_all
+
+      - name: Create Release ${{ github.ref }}
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Version ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload assets to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/*.pdf
+          file_glob: true
+          tag: ${{ github.ref }}
