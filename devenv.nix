@@ -60,8 +60,9 @@
   scripts.create_tag.exec = ''
     TAG_NAME=$(date +%F)
     echo "Creating $TAG_NAME"
+    git tag -d $TAG_NAME &> /dev/null
     git tag $TAG_NAME
-    git push origin $TAG_NAME
+    git push origin $TAG_NAME -f
   '';
 
   enterShell = ''
