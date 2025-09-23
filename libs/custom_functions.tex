@@ -1,0 +1,13 @@
+%--------------------------------------------------------------------------------
+% Function to calculate years between a given date and today
+\newcounter{birthyear}
+\newcounter{currentyear}
+\newcounter{ageyears}
+\newcommand{\calculerage}[3]{%
+  \setcounter{birthyear}{#1}%
+  \setcounter{currentyear}{\the\year}%
+  \setcounter{ageyears}{\value{currentyear}}%
+  \addtocounter{ageyears}{-\value{birthyear}}%
+  \theageyears%
+}
+

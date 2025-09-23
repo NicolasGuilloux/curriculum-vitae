@@ -1,4 +1,4 @@
-{ pkgs, lib, config, inputs, ... }:
+{ pkgs, ... }:
 
 {
   # https://devenv.sh/packages/
@@ -34,10 +34,11 @@
     "setspace"
     "etoolbox"
     "currfile"
+    "datenumber"
   ];
 
   # https://devenv.sh/scripts/
-  scripts.build_cv.exec = ''
+  scripts.build.exec = ''
     if [ ! "$1" ]; then
       echo "This script requires the filepath"
       exit 1
@@ -50,10 +51,13 @@
 
   scripts.build_all.exec = ''
     echo "Building the regular CV"
-    build_cv ./src/NicolasGuilloux_CV.tex
+    build ./src/cv/NicolasGuilloux_CV.tex
 
     echo "Building the anonymized CV"
-    build_cv ./src/NicolasGuilloux_CV_anonymized.tex
+    build ./src/cv/NicolasGuilloux_CV_anonymized.tex
+    
+    echo "Building the Skills sheet"
+    build ./src/skills_sheet/skills_sheet.tex
   '';
 
 
@@ -71,20 +75,9 @@
     echo "#####################################"
   '';
 
-  # https://devenv.sh/tasks/
-  # tasks = {
-  #   "myproj:setup".exec = "mytool build";
-  #   "devenv:enterShell".after = [ "myproj:setup" ];
-  # };
-
-  # https://devenv.sh/tests/
-  enterTest = ''
-    echo "Running tests"
-    git --version | grep --color=auto "${pkgs.git.version}"
-  '';
-
   # https://devenv.sh/git-hooks/
-  # git-hooks.hooks.shellcheck.enable = true;
+  git-hooks.hooks.latexindent.enable = true;
+  git-hooks.hooks.latexindent.settings.flags = "-c ./build/latexindent/";
 
   # See full reference at https://devenv.sh/reference/options/
 }

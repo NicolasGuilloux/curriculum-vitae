@@ -12,7 +12,7 @@ The project uses devenv.sh (Nix-based development environment) for dependency ma
 
 ### Core Commands
 
-- **Build CV**: `devenv shell build_cv` - Compiles the LaTeX CV to PDF using lualatex
+- **Build CV**: `devenv shell build` - Compiles the LaTeX CV to PDF using lualatex
 - **Enter development shell**: `devenv shell` - Loads the development environment with all dependencies
 
 ### Build Process Details

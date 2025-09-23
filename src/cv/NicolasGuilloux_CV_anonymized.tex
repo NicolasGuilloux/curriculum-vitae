@@ -18,7 +18,7 @@
 % CONFIGURATIONS
 %-------------------------------------------------------------------------------
 % A4 paper size by default, use 'letterpaper' for US letter
-\documentclass[11pt, a4paper]{../libs/awesome-cv/awesome-cv}
+\documentclass[11pt, a4paper]{libs/awesome-cv/awesome-cv}
 
 \usepackage[french]{babel}
 % Configure page margins with geometry
@@ -51,6 +51,8 @@
 \patchcmd{\@sectioncolor}{\color}{\mdseries\color}{}{}
 \makeatother
 
+\input{libs/custom_functions.tex}
+
 %-------------------------------------------------------------------------------
 %	PERSONAL INFORMATION
 %	Comment any of the lines below if they are not required
@@ -61,7 +63,7 @@
 \position{PHP, Symfony \& Sylius}
 \address{Région rennaise}
 
-\dateofbirth{31 ans}
+\dateofbirth{\calculerage{1994}{6}{30} ans}
 
 %-------------------------------------------------------------------------------
 \begin{document}
@@ -73,20 +75,20 @@
 % Print the footer with 3 arguments(<left>, <center>, <right>)
 % Leave any of these blank if they are not needed
 \makecvfooter
-  {}
-  {Curriculum vitae}
-  {\today}
+{}
+{Curriculum vitae}
+{\today}
 
 
 %-------------------------------------------------------------------------------
 %	CV/RESUME CONTENT
 %	Each section is imported separately, open each file in turn to modify content
 %-------------------------------------------------------------------------------
-\input{src/parts/experience.tex}
-\input{src/parts/education.tex}
-\input{src/parts/projects.tex}
-\input{src/parts/extracurricular.tex}
-\input{src/parts/skills.tex}
+\input{src/cv/parts/experience.tex}
+\input{src/cv/parts/education.tex}
+\input{src/cv/parts/projects.tex}
+\input{src/cv/parts/extracurricular.tex}
+\input{src/cv/parts/skills.tex}
 
 
 %-------------------------------------------------------------------------------

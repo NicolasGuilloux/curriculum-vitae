@@ -18,10 +18,11 @@
 % CONFIGURATIONS
 %-------------------------------------------------------------------------------
 % A4 paper size by default, use 'letterpaper' for US letter
-\documentclass[11pt, a4paper]{../libs/awesome-cv/awesome-cv}
+\documentclass[11pt, a4paper]{libs/awesome-cv/awesome-cv}
 
 \usepackage[french]{babel}
 \usepackage{currfile}
+\usepackage{datenumber}
 
 % Configure page margins with geometry
 \geometry{left=1.4cm, top=.8cm, right=1.4cm, bottom=1.8cm, footskip=.5cm}
@@ -53,6 +54,8 @@
 \patchcmd{\@sectioncolor}{\color}{\mdseries\color}{}{}
 \makeatother
 
+\input{libs/custom_functions.tex}
+
 %-------------------------------------------------------------------------------
 %	PERSONAL INFORMATION
 %	Comment any of the lines below if they are not required
@@ -63,7 +66,7 @@
 \position{Développeur Senior Symfony}
 \address{Région rennaise}
 
-\dateofbirth{31 ans}
+\dateofbirth{\calculerage{1994}{6}{30} ans}
 \mobile{06.83.96.81.88}
 \email{nicolas.guilloux@protonmail.com}
 \github{NicolasGuilloux}
@@ -80,21 +83,77 @@
 % Print the footer with 3 arguments(<left>, <center>, <right>)
 % Leave any of these blank if they are not needed
 \makecvfooter
-  {}
-  {Nicolas Guilloux~~~·~~~Curriculum vitae}
-  {\today}
+{}
+{Nicolas Guilloux~~~·~~~Fiche de compétences}
+{\today}
 
 
 %-------------------------------------------------------------------------------
 %	CV/RESUME CONTENT
 %	Each section is imported separately, open each file in turn to modify content
 %-------------------------------------------------------------------------------
-\input{src/parts/experience.tex}
-\input{src/parts/education.tex}
-\input{src/parts/projects.tex}
-\input{src/parts/extracurricular.tex}
-\input{src/parts/skills.tex}
+\cvsection{Présentation}
 
+\cvparagraph{
+	Je suis développeur freelance spécialisé en PHP et plus particulièrement le framework Symfony. \\
+	J'ai plus de \calculerage{2019}{8}{1} ans d'expérience dans le développement web, dont \calculerage{2022}{1}{1} ans en tant que freelance. \\
+	J'ai travaillé sur une variété de projets, notamment des applications legacy à forte affluence. \\
+	Dans toutes mes expériences, j'ai été moteur de propositions pour améliorer la technique, la qualité ainsi que l'organisation de l'équipe.
+}
+
+\cvsection{Compétences opérationnelles}
+
+\cvsubsection{Secteur d'activité}
+\begin{itemize}[label=\textbullet]
+	\item Grandes surfaces (drive, livraison)
+	\item Groupe immobilier
+	\item Organismes de formation
+	\item Agences de communication
+\end{itemize}
+
+\cvsubsection{Compétences transverses}
+\begin{itemize}[label=\textbullet]
+	\item Architecture logicielle
+	\item Domain-Driven Design (DDD)
+	\item Test-Driven Development (TDD)
+	\item Revue de code
+	\item Formateur
+	\item Rédaction de documentation technique
+	\item Analyse statique
+	\item Intégration continue
+	\item Méthodologies agiles
+\end{itemize}
+
+\cvsection{Compétences techniques}
+
+\cvsubsection{Back-end}
+\begin{itemize}[label=\textbullet]
+	\item PHP >7.3
+	\item Symfony >3.4
+	\item Doctrine \& migrations
+	\item API REST (OpenApi et Nelmio)
+	\item PHPUnit \& Prophecy
+\end{itemize}
+
+\cvsubsection{Front-end}
+\begin{itemize}[label=\textbullet]
+	\item HTML5, CSS3, JavaScript (ES6+)
+	\item Twig
+	\item Elm
+	\item AngularJS
+	\item VueJS
+\end{itemize}
+
+\cvsubsection{DevOps \& autres}
+\begin{itemize}[label=\textbullet]
+	\item Linux (NixOS, Debian, Arch) \& MacOS
+	\item Docker \& Nix devenv.sh
+	\item Gitlab CI \& Github Actions
+	\item Claude code \& Spec kit
+\end{itemize}
+
+
+\input{src/cv/parts/education.tex}
 
 %-------------------------------------------------------------------------------
 \end{document}
