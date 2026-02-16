@@ -1,0 +1,254 @@
+= Curriculum Vitae
+:toc: macro
+:toc-title: Table of Contents
+:icons: font
+:source-highlighter: highlight.js
+
+A LaTeX-based curriculum vitae project using the https://github.com/posquit0/Awesome-CV[Awesome CV] template, with a Nix-based https://devenv.sh/[Devenv] for reproducible builds.
+
+toc::[]
+
+== Overview
+
+This repository maintains a professional CV in LaTeX format with:
+
+* Modular section-based structure for easy maintenance
+* Automated PDF generation via LuaLaTeX
+* CI/CD pipeline for building and releasing
+* Reproducible builds using https://devenv.sh[devenv.sh] (Nix-based)
+
+== Project Structure
+
+[source]
+----
+curriculum-vitae/
+├── .github/
+│   └── workflows/
+│       ├── build.yml              # Build on push/PR
+│       └── release.yml            # Release on tag push
+├── src/
+│   ├── cv/
+│   │   ├── NicolasGuilloux_CV.tex              # Main CV (French)
+│   │   ├── NicolasGuilloux_CV_anonymized.tex   # Anonymized version
+│   │   └── parts/
+│   │       ├── experience.tex       # Professional experience
+│   │       ├── education.tex        # Education background
+│   │       ├── projects.tex         # Open source projects
+│   │       ├── extracurricular.tex  # Activities & interests
+│   │       └── skills.tex           # Technical skills
+│   └── skills_sheet/
+│       └── skills_sheet.tex         # Detailed skills document
+├── libs/
+│   ├── awesome-cv/                  # Git submodule (Awesome CV template)
+│   └── custom_functions.tex         # Custom LaTeX macros
+├── build/                           # Generated PDFs (git ignored)
+├── devenv.nix                       # Development environment config
+├── devenv.yaml                      # devenv.sh settings
+└── CLAUDE.md                        # AI assistant instructions
+----
+
+=== Key Directories
+
+`src/cv/`::
+Main CV source files. The CV is split into modular parts for easier editing.
+
+`src/cv/parts/`::
+Individual CV sections. Each file corresponds to a logical section of the CV.
+
+`libs/awesome-cv/`::
+The Awesome CV template (git submodule). Provides the document class and styling.
+
+`libs/custom_functions.tex`::
+Custom LaTeX macros, including an age calculator.
+
+`build/`::
+Output directory for compiled PDFs. Not tracked in git.
+
+== Prerequisites
+
+* https://nixos.org/download.html[Nix] package manager
+* https://devenv.sh[devenv.sh]
+* (Optional) https://direnv.net[direnv] for automatic environment loading
+
+== Getting Started
+
+=== Clone the Repository
+
+[source,bash]
+----
+git clone --recursive https://github.com/<username>/curriculum-vitae.git
+cd curriculum-vitae
+----
+
+NOTE: The `--recursive` flag is required to fetch the Awesome CV submodule.
+
+If you already cloned without `--recursive`:
+
+[source,bash]
+----
+git submodule update --init --recursive
+----
+
+=== Enter the Development Environment
+
+With direnv (recommended):
+
+[source,bash]
+----
+direnv allow
+----
+
+The environment loads automatically when entering the directory.
+
+Without direnv:
+
+[source,bash]
+----
+devenv shell
+----
+
+== Building
+
+=== Build a Single Document
+
+[source,bash]
+----
+devenv shell build ./src/cv/NicolasGuilloux_CV.tex
+----
+
+Output: `build/NicolasGuilloux_CV.pdf`
+
+=== Build All Documents
+
+[source,bash]
+----
+devenv shell build_all
+----
+
+This compiles:
+
+* `build/NicolasGuilloux_CV.pdf` — Full CV
+* `build/NicolasGuilloux_CV_anonymized.pdf` — Anonymized version
+* `build/NicolasGuilloux_CV_skills_sheet.pdf` — Skills sheet
+
+=== Build Process Details
+
+The build uses LuaLaTeX with the following configuration:
+
+[source,bash]
+----
+lualatex --interaction=nonstopmode --halt-on-error --output-directory=./build <file>
+----
+
+* `--interaction=nonstopmode` — Non-interactive mode
+* `--halt-on-error` — Stop on first error
+* `SOURCE_DATE_EPOCH` — Set for reproducible builds
+
+== Hacking
+
+=== Editing CV Content
+
+Each section of the CV is in a separate file under `src/cv/parts/`:
+
+[cols="1,2"]
+|===
+|File |Content
+
+|`experience.tex`
+|Professional experience entries
+
+|`education.tex`
+|Academic background
+
+|`projects.tex`
+|Open source projects
+
+|`extracurricular.tex`
+|Interests and activities
+
+|`skills.tex`
+|Technical skills
+|===
+
+Edit these files to update CV content, then rebuild.
+
+=== Adding a New Section
+
+1. Create a new `.tex` file in `src/cv/parts/`
+2. Use the Awesome CV macros (`\cvsection`, `\cventry`, etc.)
+3. Include it in `NicolasGuilloux_CV.tex`:
++
+[source,latex]
+----
+\input{parts/your_new_section.tex}
+----
+
+=== Customising Appearance
+
+The main CV file (`NicolasGuilloux_CV.tex`) contains configuration options:
+
+[source,latex]
+----
+% Color theme (awesome-red, awesome-emerald, awesome-skyblue, etc.)
+\colorlet{awesome}{awesome-red}
+
+% Page margins
+\geometry{left=1.4cm, top=0.8cm, right=1.4cm, bottom=1.8cm}
+
+% Header style
+\headersocialstyle{\color{text}\small}
+----
+
+See the https://github.com/posquit0/Awesome-CV[Awesome CV documentation] for all available options.
+
+=== Custom Macros
+
+The file `libs/custom_functions.tex` contains custom LaTeX macros:
+
+`\calculerage{year}{month}{day}`::
+Calculates and displays age from a birth date.
+
+=== Development Environment
+
+The `devenv.nix` file defines:
+
+* LaTeX packages (38 packages from TexLive)
+* Build scripts (`build`, `build_all`, `create_tag`)
+* Development tools (git, gh CLI)
+
+To add a LaTeX package, edit `devenv.nix`:
+
+[source,nix]
+----
+texlive = pkgs.texlive.combine {
+  inherit (pkgs.texlive)
+    # ... existing packages
+    your-new-package
+  ;
+};
+----
+
+== CI/CD
+
+=== Build Workflow
+
+Triggered on every push and pull request. Builds all documents and uploads PDFs as artifacts.
+
+=== Release Workflow
+
+Triggered when a tag is pushed. Creates a GitHub release with the compiled PDFs.
+
+To create a release:
+
+[source,bash]
+----
+devenv shell create_tag
+----
+
+This creates a tag with the current date (format: `YYYY-MM-DD`) and pushes it.
+
+== License
+
+This project is licensed under the terms specified in the `LICENSE` file.
+
+The Awesome CV template is licensed under the https://github.com/posquit0/Awesome-CV/blob/master/LICENSE[LPPL 1.3c].
