@@ -55,9 +55,6 @@
 
     echo "Building the anonymized CV"
     build ./src/cv/NicolasGuilloux_CV_anonymized.tex
-    
-    echo "Building the Skills sheet"
-    build ./src/skills_sheet/skills_sheet.tex
   '';
 
 
