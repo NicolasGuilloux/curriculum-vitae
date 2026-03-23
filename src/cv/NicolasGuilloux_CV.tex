@@ -53,6 +53,9 @@
 \patchcmd{\@sectioncolor}{\color}{\mdseries\color}{}{}
 \makeatother
 
+% Suppress sub-2pt overfull warnings (header social links row)
+\hfuzz=2pt
+
 \input{libs/custom_functions.tex}
 
 %-------------------------------------------------------------------------------
@@ -78,6 +81,10 @@
 % Print the header with above personal informations
 % Give optional argument to change alignment(C: center, L: left, R: right)
 \makecvheader[C]
+
+\cvparagraph{
+	Développeur freelance senior spécialisé en Symfony depuis \calculerage{2018}{11}{12} ans, avec une forte culture TDD/DDD et une expérience en architecture microservices sur des projets à fort trafic. 
+}
 
 % Print the footer with 3 arguments(<left>, <center>, <right>)
 % Leave any of these blank if they are not needed
