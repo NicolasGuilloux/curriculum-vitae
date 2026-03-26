@@ -30,18 +30,65 @@
 	\end{center}
 }
 
+% Storage for logo path passed via \inlinelogo inside a cvbigentry title argument.
+% \inlinelogo saves the path globally and renders nothing; \ignorespaces eats
+% the whitespace that typically follows the macro call in the source.
+\newlength{\cvlogocolwidth}
+\newlength{\cvlogoheight}
+\newsavebox{\cvtitlebox}
+\newsavebox{\cvposbox}
+\newcommand{\cvlogopath}{}
+\newcommand{\inlinelogo}[1]{\gdef\cvlogopath{#1}\ignorespaces}
+
 % Define a big entry of cv information
 % Usage: \cvbigentry{<position>}{<title>}{<location>}{<date>}{<description>}
+% The <title> argument may start with \inlinelogo{<path>} to display a logo
+% spanning both the title and position rows.
 \newcommand{\cvbigentry}[5]{%
-	\setlength\tabcolsep{0pt}
-	\setlength{\extrarowheight}{0pt}
-	\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
-		\ifempty{#2#3}
-		{\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
-		{\textbf{\subsectionstyle{#2}} & \entrylocationstyle{#3} \\
-			\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
-		\ifstrempty{#5}
-		{}
-		{\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}
-	\end{tabular*}%
+	\gdef\cvlogopath{}%
+	% Box the styled title; executes \inlinelogo as a side-effect (sets \cvlogopath).
+	\sbox{\cvtitlebox}{\textbf{\subsectionstyle{#2}}}%
+	\setlength\tabcolsep{0pt}%
+	\setlength{\extrarowheight}{0pt}%
+	\ifstrempty{\cvlogopath}{%
+		% ── No logo: original two-column layout ──────────────────────────────
+		\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+			\ifempty{#2#3}
+			{\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
+			{\usebox{\cvtitlebox} & \entrylocationstyle{#3} \\
+				\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
+			\ifstrempty{#5}
+			{}
+			{\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}
+		\end{tabular*}%
+	}{%
+		% ── Logo present: measure both text lines, set logo height to match ───
+		\sbox{\cvposbox}{\entrypositionstyle{#1}}%
+		% Total height = (ht+dp of title) + 1pt gap + (ht+dp of position)
+		\setlength{\cvlogoheight}{\ht\cvtitlebox}%
+		\addtolength{\cvlogoheight}{\dp\cvtitlebox}%
+		\addtolength{\cvlogoheight}{1pt}%
+		\addtolength{\cvlogoheight}{\ht\cvposbox}%
+		\addtolength{\cvlogoheight}{\dp\cvposbox}%
+		\addtolength{\cvlogoheight}{4pt}%
+		\settowidth{\cvlogocolwidth}{\includegraphics[height=\cvlogoheight]{\cvlogopath}}%
+		\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+			% Left cell: logo + text, both vertically centered via parbox[c] ────
+			\parbox[c]{\cvlogocolwidth}{\centering\includegraphics[height=\cvlogoheight]{\cvlogopath}}%
+			\hspace{4pt}%
+			\parbox[c]{\dimexpr\textwidth - 4.5cm - \cvlogocolwidth - 4pt\relax}{%
+				\usebox{\cvtitlebox}\\[1pt]%
+				\usebox{\cvposbox}%
+			}%
+			&
+			% Right cell ─────────────────────────────────────────────────────────
+			\begin{tabular}[c]{@{} r @{}}
+				\entrylocationstyle{#3} \\[1pt]
+				\entrydatestyle{#4}
+			\end{tabular} \\
+			\ifstrempty{#5}
+			{}
+			{\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}
+		\end{tabular*}%
+	}%
 }

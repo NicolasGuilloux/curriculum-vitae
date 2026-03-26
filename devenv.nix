@@ -56,8 +56,9 @@
   '';
 
   scripts.build_cv_long.exec = ''
-    echo "Building the regular CV"
+    echo "Building the Long CV"
     build ./src/cv_long/NicolasGuilloux_CV_long.tex
+    build ./src/cv_long/NicolasGuilloux_CV_long_noname.tex
   '';
 
   scripts.watch_cv_long.exec = ''
@@ -77,6 +78,9 @@
 
     echo "Building the Long CV"
     build ./src/cv_long/NicolasGuilloux_CV_long.tex
+    
+        echo "Building the NoName Long CV"
+        build ./src/cv_long/NicolasGuilloux_CV_long_noname.tex
   '';
 
 
