@@ -4,10 +4,44 @@
 \newcounter{currentyear}
 \newcounter{ageyears}
 \newcommand{\calculerage}[3]{%
-  \setcounter{birthyear}{#1}%
-  \setcounter{currentyear}{\the\year}%
-  \setcounter{ageyears}{\value{currentyear}}%
-  \addtocounter{ageyears}{-\value{birthyear}}%
-  \theageyears%
+	\setcounter{birthyear}{#1}%
+	\setcounter{currentyear}{\the\year}%
+	\setcounter{ageyears}{\value{currentyear}}%
+	\addtocounter{ageyears}{-\value{birthyear}}%
+	\theageyears%
 }
 
+% Define a small inline title
+% Usage: \inlinetitle{<title>}
+\newcommand{\inlinetitle}[1]{%
+	\begin{minipage}{\linewidth}
+		\raggedright\textbf{#1}
+	\end{minipage}
+	\vspace{-2mm}
+}
+
+
+
+% Define an environment for cvbigentry
+\newenvironment{cvbigentries}{%
+	\vspace{\acvSectionContentTopSkip}
+	\begin{center}
+		}{%
+	\end{center}
+}
+
+% Define a big entry of cv information
+% Usage: \cvbigentry{<position>}{<title>}{<location>}{<date>}{<description>}
+\newcommand{\cvbigentry}[5]{%
+	\setlength\tabcolsep{0pt}
+	\setlength{\extrarowheight}{0pt}
+	\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+		\ifempty{#2#3}
+		{\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
+		{\textbf{\subsectionstyle{#2}} & \entrylocationstyle{#3} \\
+			\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
+		\ifstrempty{#5}
+		{}
+		{\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}
+	\end{tabular*}%
+}

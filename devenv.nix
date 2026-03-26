@@ -2,10 +2,11 @@
 
 {
   # https://devenv.sh/packages/
-  packages = with pkgs; [ 
+  packages = with pkgs; [
     git
     claude-code
     gh
+    fswatch
   ];
 
   # https://devenv.sh/languages/
@@ -13,16 +14,16 @@
   languages.texlive.packages = [
     # Packages actually required by awesome-cv template
     "enumitem"
-    "xifthen" 
+    "xifthen"
     "xstring"
     "ifmtarg"
     "fontawesome6"
-    "sourcesanspro" 
+    "sourcesanspro"
     "tcolorbox"
     "roboto"
     "tikzfill"
     "geometry"
-    "fancyhdr" 
+    "fancyhdr"
     "xcolor"
     "ragged2e"
     "fontspec"
@@ -49,15 +50,33 @@
 	  lualatex --interaction=nonstopmode --halt-on-error --output-directory=./build $1
   '';
 
+  scripts.build_cv.exec = ''
+    echo "Building the regular CV"
+    build ./src/cv/NicolasGuilloux_CV.tex
+  '';
+
+  scripts.build_cv_long.exec = ''
+    echo "Building the regular CV"
+    build ./src/cv_long/NicolasGuilloux_CV_long.tex
+  '';
+
+  scripts.watch_cv_long.exec = ''
+    echo "Watching src/cv_long and libs for changes..."
+    fswatch -o ./src/cv_long ./libs | while read; do
+      echo "Change detected, rebuilding..."
+      build_cv_long
+    done
+  '';
+
   scripts.build_all.exec = ''
     echo "Building the regular CV"
     build ./src/cv/NicolasGuilloux_CV.tex
 
     echo "Building the anonymized CV"
     build ./src/cv/NicolasGuilloux_CV_anonymized.tex
-    
-    echo "Building the skills sheet"
-    build ./src/skills_sheet/skills_sheet.tex
+
+    echo "Building the Long CV"
+    build ./src/cv_long/NicolasGuilloux_CV_long.tex
   '';
 
 
