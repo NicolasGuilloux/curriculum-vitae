@@ -40,14 +40,14 @@
 
   # https://devenv.sh/scripts/
   scripts.build.exec = ''
-    if [ ! "$1" ]; then
-      echo "This script requires the filepath"
-      exit 1
-    fi
+        if [ ! "$1" ]; then
+          echo "This script requires the filepath"
+          exit 1
+        fi
 
-	  mkdir -p ./build
-    export SOURCE_DATE_EPOCH=$(date +%s -r $1)
-	  lualatex --interaction=nonstopmode --halt-on-error --output-directory=./build $1
+    	  mkdir -p ./build
+        export SOURCE_DATE_EPOCH=$(date +%s -r $1)
+    	  lualatex --interaction=nonstopmode --halt-on-error --output-directory=./build $1
   '';
 
   scripts.build_cv.exec = ''
@@ -78,11 +78,13 @@
 
     echo "Building the Long CV"
     build ./src/cv_long/NicolasGuilloux_CV_long.tex
-    
-        echo "Building the NoName Long CV"
-        build ./src/cv_long/NicolasGuilloux_CV_long_noname.tex
-  '';
 
+    echo "Building the NoName Long CV"
+    build ./src/cv_long/NicolasGuilloux_CV_long_noname.tex
+
+    echo "Building the NoName NoAvatar Long CV"
+    build ./src/cv_long/NicolasGuilloux_CV_long_noname_noavatar.tex
+  '';
 
   scripts.create_tag.exec = ''
     TAG_NAME=$(date +%F)
