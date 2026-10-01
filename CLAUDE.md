@@ -37,6 +37,11 @@ The build process:
   - `skills.tex` - Technical skills
 - `build/` - Generated PDF output directory
 
+## Layout Constraints (non-negotiable)
+
+- **Short CV (`src/cv/`) MUST fit on exactly 1 page**, for both `NicolasGuilloux_CV.tex` and `NicolasGuilloux_CV_anonymized.tex`. When adding content, condense or remove the least interesting / oldest experiences and projects first. Always check the page count after building (`pdfinfo build/NicolasGuilloux_CV.pdf`).
+- **Long CV (`src/cv_long/`) can have any number of pages, but no experience may be split across two pages.** Every experience in `src/cv_long/parts/experience.tex` must be wrapped in `\begin{cvexperience} ... \end{cvexperience}` (defined in `libs/custom_functions.tex`), which keeps it on a single page. A single experience must therefore stay shorter than one page.
+
 ## Development Environment
 
 The project uses devenv.sh with:

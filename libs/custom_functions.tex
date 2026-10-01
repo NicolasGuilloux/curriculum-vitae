@@ -30,6 +30,19 @@
 	\end{center}
 }
 
+% Wrap a whole experience (cvbigentry + inline titles + items) so it is never
+% split across pages: the block moves to the next page as a unit.
+% Usage: \begin{cvexperience} ... \end{cvexperience}
+% minipage resets \parskip to 0, so the outer value is restored inside.
+\newlength{\cvexpparskip}
+\newenvironment{cvexperience}{%
+	\setlength{\cvexpparskip}{\parskip}%
+	\par\noindent\begin{minipage}{\linewidth}%
+	\setlength{\parskip}{\cvexpparskip}%
+}{%
+	\end{minipage}\par\vspace{3mm}%
+}
+
 % Storage for logo path passed via \inlinelogo inside a cvbigentry title argument.
 % \inlinelogo saves the path globally and renders nothing; \ignorespaces eats
 % the whitespace that typically follows the macro call in the source.
@@ -50,7 +63,7 @@
 	\sbox{\cvtitlebox}{\textbf{\subsectionstyle{#2}}}%
 	\setlength\tabcolsep{0pt}%
 	\setlength{\extrarowheight}{0pt}%
-	\ifstrempty{\cvlogopath}{%
+	\ifdefempty{\cvlogopath}{%
 		% ── No logo: original two-column layout ──────────────────────────────
 		\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
 			\ifempty{#2#3}
